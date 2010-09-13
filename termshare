@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+
+def usage()
+    puts '    usage:'
+    puts '        share | read $USER '
+    exit 1
+end
+
+TMP_DIR = '/tmp/termshare/'
+
+# ============================================================================
+
+if ARGV.length == 1 and ARGV[0] == 'share'
+    puts 'share'
+    `mkdir #{TMP_DIR}`
+    exec('script -t0 #{TMP_DIR}$USER bash')
+elsif ARGV.length == 2 and ARGV[0] == 'read'
+    file = TMP_DIR+ARGV[1]
+    if not File.exists? file
+        puts "No shared terminal from '#{ARGV[1]}'"
+        exit 1
+    end
+    puts "Reading from #{file}"
+    exec('tail -f #{file}')
+else
+    usage()
+end

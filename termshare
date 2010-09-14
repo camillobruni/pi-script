@@ -16,9 +16,9 @@ if ARGV.length == 1 and ARGV[0] == 'share'
     `touch #{TMP_FILE}`
     `chmod a+r #{TMP_FILE}`
     if RUBY_PLATFORM.include? "darwin"
-        exec('script -t0 #{TMP_FILE} bash')
+        exec("script -t0 #{TMP_FILE} bash")
     else
-        exec('script -f #{TMP_FILE} bash')
+        exec("script -f #{TMP_FILE} bash")
     end
 elsif ARGV.length == 2 and ARGV[0] == 'read'
     if RUBY_PLATFORM.include? "darwin"
@@ -31,7 +31,7 @@ elsif ARGV.length == 2 and ARGV[0] == 'read'
         exit 1
     end
     puts "Reading from #{file}"
-    exec('tail -f #{file}')
+    exec("tail -f #{file}")
 else
     usage()
 end

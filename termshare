@@ -7,19 +7,25 @@ def usage()
     exit 1
 end
 
-TMP_DIR = '/tmp/termshare/'
+TMP_FILE = '~/.termshare'
 
 # ============================================================================
 
 if ARGV.length == 1 and ARGV[0] == 'share'
     puts 'share'
-    `mkdir -p #{TMP_DIR}`
-    `chmod +rw #{TMP_DIR}`
-    `touch #{TMP_DIR}$USER`
-    `chmod +r #{TMP_DIR}$USER`
-    exec('script #{TMP_DIR}$USER bash')
+    `touch #{TMP_FILE}`
+    `chmod a+r #{TMP_FILE}`
+    if RUBY_PLATFORM.include? "darwin"
+        exec('script -t0 #{TMP_FILE} bash')
+    else
+        exec('script -f #{TMP_FILE} bash')
+    end
 elsif ARGV.length == 2 and ARGV[0] == 'read'
-    file = TMP_DIR+ARGV[1]
+    if RUBY_PLATFORM.include? "darwin"
+        file = "/Users/#{ARGV[1]}/.termshare"
+    else
+        file = "/home/#{ARGV[1]}/.termshare"
+    end
     if not File.exists? file
         puts "No shared terminal from '#{ARGV[1]}'"
         exit 1
